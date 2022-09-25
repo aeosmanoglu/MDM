@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  web:
+    build:
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
+    ports:
+      - 8080:80
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    ports:
+      - 6033:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
