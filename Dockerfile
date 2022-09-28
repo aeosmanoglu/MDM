@@ -2,9 +2,15 @@ FROM php:apache
 
 RUN apt-get update
 RUN apt-get upgrade -y
+RUN apt-get install wget git -y
 
-RUN apt-get install wget git libgd-dev libicu-dev libzip-dev libbz2-dev -y
-RUN docker-php-ext-install mysqli gd intl zip sockets bz2 exif opcache
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions
+RUN sync
+RUN install-php-extensions curl fileinfo gd json mbstring mysqli session zlib simplexml xml intl ldap openssl xmlrpc APCu zip sockets bz2
+# cli domxml
+
+COPY ./php.ini $PHP_INI_DIR/
 
 RUN wget https://github.com/glpi-project/glpi/releases/download/10.0.3/glpi-10.0.3.tgz -P /var/www/html
 RUN tar -xvzf /var/www/html/glpi-10.0.3.tgz
